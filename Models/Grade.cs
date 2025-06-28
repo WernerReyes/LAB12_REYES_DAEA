@@ -9,5 +9,7 @@
         public string Description { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public List<Student> Students { get; set; }
     }
 }

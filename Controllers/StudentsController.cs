@@ -12,49 +12,47 @@ namespace LAB12_REYES.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GradesController : ControllerBase
+    public class StudentsController : ControllerBase
     {
         private readonly DBContext _context;
 
-        public GradesController(DBContext context)
+        public StudentsController(DBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Grades
+        // GET: api/Students
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Grade>>> GetGrade()
+        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            var grades = await _context.Grades.ToListAsync();
-
-            return grades.Where(c => !c.IsDeleted).ToList();
+            return await _context.Students.ToListAsync();
         }
 
-        // GET: api/Grades/5
+        // GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Grade>> GetGrade(int id)
+        public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var grade = await _context.Grades.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
 
-            if (grade == null)
+            if (student == null)
             {
                 return NotFound();
             }
 
-            return grade;
+            return student;
         }
 
-        // PUT: api/Grades/5
+        // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGrade(int id, Grade grade)
+        public async Task<IActionResult> PutStudent(int id, Student student)
         {
-            if (id != grade.GradeID)
+            if (id != student.StudentID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(grade).State = EntityState.Modified;
+            _context.Entry(student).State = EntityState.Modified;
 
             try
             {
@@ -62,7 +60,7 @@ namespace LAB12_REYES.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GradeExists(id))
+                if (!StudentExists(id))
                 {
                     return NotFound();
                 }
@@ -75,40 +73,36 @@ namespace LAB12_REYES.Controllers
             return NoContent();
         }
 
-        // POST: api/Grades
+        // POST: api/Students
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Grade>> PostGrade(Grade grade)
+        public async Task<ActionResult<Student>> PostStudent(Student student)
         {
-            _context.Grades.Add(grade);
+            _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGrade", new { id = grade.GradeID }, grade);
+            return CreatedAtAction("GetStudent", new { id = student.StudentID }, student);
         }
 
-        // DELETE: api/Grades/5
+        // DELETE: api/Students/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGrade(int id)
+        public async Task<IActionResult> DeleteStudent(int id)
         {
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null)
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
             {
                 return NotFound();
             }
 
-            grade.IsDeleted = true; // Soft delete
-
-            _context.Entry(grade).State = EntityState.Modified;
-
-
+            _context.Students.Remove(student);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool GradeExists(int id)
+        private bool StudentExists(int id)
         {
-            return _context.Grades.Any(e => e.GradeID == id);
+            return _context.Students.Any(e => e.StudentID == id);
         }
     }
 }
